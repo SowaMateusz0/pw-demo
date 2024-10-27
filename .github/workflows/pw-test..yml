@@ -1,12 +1,13 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Playwright Tests
 on:
  push:
    branches: [main, master]
  pull_request:
    branches: [main, master]
+permissions:
+    contents: read
+    checks: write
+    id-token: write
 jobs:
  run-tests:
    timeout-minutes: 5
@@ -22,16 +23,16 @@ jobs:
        run: npx playwright install --with-deps
      - name: Run Playwright tests
        run: npm run test
-     - name: Archive tests results
+     - name: Archive test results
        if: success() || failure()
-       uses: actions/upload-artifact@v3
-       with:
+       uses: actions/upload-artifact@v4
+       with: 
          name: test-report
          path: |
-            ./playwright-report/**/*.*
-            ./test-results/**/*.*
-     - name: Publish Test Report
-       uses: mikepenz/action-junit-report@v4
+           ./playwright-report/**/*.*
+           ./test-result/**/*.*
+     - name: Publish test report
+       uses: mikepenz/action-junit-report@v4.3.1
        if: success() || failure()
-       with:
-         report_paths: "./playwright-report/results.xml"
+       with: 
+          report_paths: "./playwright-report/results.xml" 
